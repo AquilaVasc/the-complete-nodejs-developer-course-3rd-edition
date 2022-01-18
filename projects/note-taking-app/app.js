@@ -1,4 +1,3 @@
-const chalk = require('chalk');
 const yargs = require('yargs');
 const notesController = require('./notes');
 
@@ -30,17 +29,15 @@ yargs.command({
 yargs.command({
     command: 'remove',
     describe: 'Remove a note',
-    handler: () => {
-        console.log('Removing the note');
-    }
-})
-
-//Create read command
-yargs.command({
-    command: 'read',
-    describe: 'Reads a note',
-    handler: () => {
-        console.log('Reading the note')
+    builder: {
+        title: {
+            describe: 'Note title',
+            demandOption: true,
+            type: 'string'
+        }
+    },
+    handler: (argv) => {
+        notesController.removeNote(argv.title);
     }
 })
 
@@ -49,7 +46,7 @@ yargs.command({
     command: 'list',
     describe: 'Presents the list of notes',
     handler: () => {
-        console.log(getNotes());
+        notesController.getNotes();
     }
 })
 
