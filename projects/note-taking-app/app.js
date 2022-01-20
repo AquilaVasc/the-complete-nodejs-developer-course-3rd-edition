@@ -50,4 +50,20 @@ yargs.command({
     }
 })
 
+//Create read command
+yargs.command({
+    command: 'read',
+    describe: 'Presents a specific note',
+    builder: {
+        title: {
+            describe: 'Note title',
+            demandOption: true,
+            type: 'string'
+        }
+    },
+    handler(argv) {
+        notesController.readNote(argv.title);
+    }
+})
+
 yargs.parse();
