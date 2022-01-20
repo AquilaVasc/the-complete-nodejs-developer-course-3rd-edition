@@ -46,7 +46,7 @@ yargs.command({
     command: 'list',
     describe: 'Presents the list of notes',
     handler() {
-        notesController.getNotes();
+        notesController.listNotes();
     }
 })
 
