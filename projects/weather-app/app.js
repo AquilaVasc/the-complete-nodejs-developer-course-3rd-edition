@@ -3,14 +3,15 @@ const retrieveWeather = require('./utils/retrieveWeather');
 
 discoverCordinates('Los Angeles', (error, data) => {
   if(error){
-    console.log('Error', error);
-  }else{
-    retrieveWeather(data, (error, data) => {
-      if(error){
-        console.log('Error', error);  
-      }else{
-        console.log('Data', data)
-      }
-    })
+    return console.log('Error', error);
   }
+
+  retrieveWeather(data, (error, forecastData) => {
+    if(error){
+      return console.log('Error', error);  
+    }
+
+    console.log(data.location);
+    console.log(forecastData);
+  })
 });

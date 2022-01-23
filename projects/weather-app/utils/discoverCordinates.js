@@ -16,7 +16,8 @@ const discoverCordinates = (search_text, callback) => {
       const latLongArray = features[0].center;
       callback(undefined, {
         latitude: latLongArray[1],
-        longitude: latLongArray[0]
+        longitude: latLongArray[0],
+        location: features[0].place_name
       });
     }
   });
