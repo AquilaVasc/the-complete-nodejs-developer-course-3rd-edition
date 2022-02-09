@@ -14,8 +14,8 @@ const retrieveWeather = ({ latitude, longitude } = {}, callback) => {
     }else{
       const current = body.current;
       if(current){
-        const { weather_descriptions, temperature, feelslike } = current;
-        callback(undefined, `${weather_descriptions[0]}. It is currently ${temperature} degress out. It feels like ${feelslike} degrees out.`);
+        const { weather_descriptions, temperature, feelslike, humidity} = current;
+        callback(undefined, `${weather_descriptions[0]}. It is currently ${temperature} degress out. It feels like ${feelslike} degrees out. The humidity is ${humidity}%.`);
       }
     }
   });
