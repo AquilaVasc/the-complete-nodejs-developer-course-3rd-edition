@@ -4,10 +4,6 @@ const mongodb = require('mongodb');
 
 const { MongoClient, ObjectId } = mongodb;
 
-const id = new ObjectId();
-console.log(id.id.length);
-console.log(id.toHexString().length);
-
 const connectionURL = 'mongodb://127.0.0.1:27017';
 const databaseName = 'task-manager';
 
@@ -18,52 +14,41 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
 
     const db = client.db(databaseName);
 
-    // db.collection('users').insertOne({
-    //     name: 'Fernanda',
-    //     age: 21
-    // }, (error, result) => {
+    // db.collection('users').findOne({ _id:  new ObjectId("6207f67189a09293b98e9b70")}, (error, user) => {
     //     if(error) {
-    //         return console.log('Unable to insert user');
+    //         return console.log('Unable to fetch');
     //     }
-
-    //     console.log(result);
+        
+    //     console.log(user)
     // });
 
-    // db.collection('users').insertMany([
-    //     {
-    //         name: 'Jen',
-    //         age: 28
-    //     }, 
-    //     {
-    //         name: 'Augusto',
-    //         age: 27
-    //     }
-    // ], (error, result) => {
+    // db.collection('users').find({age: 25}).toArray((error, users) => {
     //     if(error) {
-    //         return console.log('Unable to insert documents');
+    //         return console.log('Unable to find users with that age')
     //     }
+    //     console.log(users)
+    // });
 
-    //     console.log(result);
-    // })
-
-    // db.collection('tasks').insertMany([
-    //     {
-    //         description: "Study JUnit",
-    //         completed: false
-    //     },
-    //     {
-    //         description: "Finishe the Hero Digital Assignment",
-    //         completed: false
-    //     },
-    //     {
-    //         description: "Have dinner",
-    //         completed: true
-    //     }
-    // ], (error, result) => {
+    // db.collection('users').find({age: 25}).count((error, count) => {
     //     if(error) {
-    //         return console.log('Unable to insert tasks');
+    //         return console.log('Unable to find users with that age')
     //     }
+    //     console.log(count)
+    // });
 
-    //     console.log(result);
-    // })
+    db.collection('tasks').findOne({_id: new ObjectId("620716b4bda0bf2867f32792")}, (error, task) => {
+        if(error) {
+            return console.log('Unable to find that task')
+        }
+        
+        console.log(task)
+    });
+
+    db.collection('tasks').find({completed: false}).toArray((error, tasks) => {
+        if(error) {
+            return console.log('Unable to find tasks that match those criterias')
+        }
+
+        console.log(tasks)
+    });
 });
