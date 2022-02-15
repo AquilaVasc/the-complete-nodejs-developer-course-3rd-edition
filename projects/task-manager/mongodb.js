@@ -14,41 +14,27 @@ MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client) =>
 
     const db = client.db(databaseName);
 
-    // db.collection('users').findOne({ _id:  new ObjectId("6207f67189a09293b98e9b70")}, (error, user) => {
-    //     if(error) {
-    //         return console.log('Unable to fetch');
+    // db.collection('users').updateOne({
+    //     _id: new ObjectId('6207132d36266b2c58b04f87')
+    // }, {
+    //     $inc: {
+    //         age: 1
     //     }
-        
-    //     console.log(user)
+    // }).then((result) => {
+    //     console.log(result);
+    // }).catch((error) => {
+    //     console.log(error);
     // });
 
-    // db.collection('users').find({age: 25}).toArray((error, users) => {
-    //     if(error) {
-    //         return console.log('Unable to find users with that age')
-    //     }
-    //     console.log(users)
-    // });
-
-    // db.collection('users').find({age: 25}).count((error, count) => {
-    //     if(error) {
-    //         return console.log('Unable to find users with that age')
-    //     }
-    //     console.log(count)
-    // });
-
-    db.collection('tasks').findOne({_id: new ObjectId("620716b4bda0bf2867f32792")}, (error, task) => {
-        if(error) {
-            return console.log('Unable to find that task')
+    db.collection('tasks').updateMany({
+        completed: false
+    },{
+        $set: {
+            completed: true
         }
-        
-        console.log(task)
-    });
-
-    db.collection('tasks').find({completed: false}).toArray((error, tasks) => {
-        if(error) {
-            return console.log('Unable to find tasks that match those criterias')
-        }
-
-        console.log(tasks)
+    }).then((result) => {
+        console.log(result)
+    }).catch((error) => {
+        console.log(error);
     });
 });
