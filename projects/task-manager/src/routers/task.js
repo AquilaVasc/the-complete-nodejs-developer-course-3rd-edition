@@ -58,15 +58,21 @@ router.patch('/tasks/:id', async (req, res) => {
     const { id } = req.params;
 
     try {
-        const updatedTask = await Task.findByIdAndUpdate(id, req.body, { returnDocument: 'after', runValidators: true });
+        const task = await Task.findById(id);
 
-        if(!updatedTask) {
+        updates.forEach(update => {
+            task[update] = req.body[update];
+        });
+
+        await task.save();
+
+        if(!task) {
             return res.status(404).send();
         }
 
-        res.status(201).send(updatedTask);
+        res.status(201).send(task);
     } catch (e) {
-        res.status(400).send();
+        res.status(400).send(e);
     }
 });
 
