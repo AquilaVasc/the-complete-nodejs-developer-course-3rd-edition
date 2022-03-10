@@ -24,26 +24,39 @@ router.post('/users/login', async (req, res) => {
         const user = await User.findByCredentials(email, password);
         const token = await user.generateAuthToken();
 
-        res.send({ user, token});
+        res.send({ user: user.getPublicProfile(), token});
     } catch (error) {
         res.status(400).send();
     }
 });
 
-router.get('/users', auth, async (req, res) => {
+router.post('/users/logout', auth, async (req, res) => {
     try {
-        const users = await User.find({});
+        req.user.tokens = req.user.tokens.filter((token) => {
+            return token.token !== req.token
+        });
+        await req.user.save();
 
-        res.send(users);
-    } catch (e) {
+        res.send()
+    } catch (error) {
         res.status(500).send();
     }
+});
 
-    User.find({}).then((users) => {
-        res.send(users);
-    }).catch((error) => {
+router.post('/users/logoutAll', auth, async (req, res) => {
+    try {
+        req.user.tokens = [];
+        await req.user.save();
+
+        res.send()
+    } catch (error) {
         res.status(500).send();
-    });
+    }
+});
+
+// auth is the middleware
+router.get('/users/me', auth, async (req, res) => {
+    res.send(req.user);
 });
 
 router.get('/users/:id', async (req, res) => {
