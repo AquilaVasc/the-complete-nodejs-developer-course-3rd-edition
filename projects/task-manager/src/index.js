@@ -6,6 +6,29 @@ const taskRouter = require('./routers/task');
 const app = express();
 const port = process.env.PORT || 3000;
 
+const multer = require('multer');
+const upload = multer({
+    dest: 'images',
+    limits: {
+        fileSize: 1000000 // 1MB size
+    },
+    fileFilter(req, file, cb) {
+        if(!file.originalname.match(/\.(doc|docx)$/)) {
+            return cb(new Error('Please upload a word document'));
+        }
+
+        cb(undefined, true);
+    } // only allows pdf and doc file
+});
+
+app.post('/upload', upload.single('upload'), (req, res) => {
+    res.send();
+}, (error, req, res, next) => {
+    if(error) {
+        res.status(400).send({error: error.message});
+    }
+});
+
 // Authomatically pass incoming json to an object
 app.use(express.json());
 app.use(userRouter);
@@ -14,22 +37,3 @@ app.use(taskRouter);
 app.listen(port, () => {
     console.log('server is up on port ' + port);
 })
-
-const Task = require('./models/task');
-const User = require('./models/user');
-
-const main = async () => {
-    // const task = await Task.findById('622bfb964b8ca40e7a012c9e');
-    // await task.populate('owner');
-
-    // console.log(task.owner);
-
-    const user = await User.findById('622bfb7d4b8ca40e7a012c98')
-
-    if(user) {
-        await user.populate('tasks')
-        console.log(user.tasks)
-    }
-}
-
-main();

@@ -3,6 +3,8 @@ const User = require('../models/user');
 const auth = require('../middleware/auth');
 const router = new express.Router();
 
+const multer = require('multer');
+
 router.post('/users', async (req, res) => {
     const user = new User(req.body);
 
@@ -59,22 +61,6 @@ router.get('/users/me', auth, async (req, res) => {
     res.send(req.user);
 });
 
-// router.get('/users/:id', async (req, res) => {
-//     const { id } = req.params;
-
-//     try {
-//         const user = await User.findById(id)
-
-//         if(!user) {
-//             return res.status(404).send();
-//         }
-
-//         res.send(user);
-//     } catch (e) {
-//         res.status(500).send();
-//     }
-// });
-
 router.patch('/users/me', auth, async (req, res) => {
     const updates = Object.keys(req.body);
     const allowedUpdates = ['name', 'email', 'password', 'age'];
@@ -108,5 +94,28 @@ router.delete('/users/me', auth, async (req, res) => {
         res.status(500).send(error);
     }
 });
+
+const storage = multer.memoryStorage();
+const upload = multer({
+    dest: 'avatars',
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req, file, cb) {
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(new Error('Please upload an image!'));
+        }
+        
+        cb(undefined, true);
+    },
+    storage
+});
+
+router.post('/users/me/avatar', auth, upload.single('avatar'), async(req, res) => {
+    const user = req.user;
+    res.send({file: req.file, files: req.files})
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+})
 
 module.exports = router;
